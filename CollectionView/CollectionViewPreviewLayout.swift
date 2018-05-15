@@ -20,7 +20,7 @@ public final class CollectionViewPreviewLayout : CollectionViewLayout  {
     // MARK: - Default layout values
     
     /// The vertical spacing between items in the same column
-    public var interItemSpacing : CGFloat = 8 { didSet{ invalidate() }}
+    override public var interItemSpacing: CGFloat { didSet{ invalidate() }}
     
     public override var scrollDirection: CollectionViewScrollDirection { return .horizontal }
     
@@ -98,7 +98,7 @@ public final class CollectionViewPreviewLayout : CollectionViewLayout  {
                     section.frame = section.frame.union(attrs.frame)
                     section.itemAttributes.append(attrs)
                     
-                    left = attrs.frame.maxX + interItemSpacing
+                    left = attrs.frame.maxX + self.interItemSpacing
                 }
             }
             sections.append(section)

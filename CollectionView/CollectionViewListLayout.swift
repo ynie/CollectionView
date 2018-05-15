@@ -97,7 +97,7 @@ public final class CollectionViewListLayout : CollectionViewLayout  {
     //MARK: - Default layout values
     
     /// The vertical spacing between items in the same column
-    public final var interitemSpacing : CGFloat = 0 { didSet{ invalidate() }}
+    override public var interItemSpacing: CGFloat { didSet{ invalidate() }}
     
     /// The vertical spacing between items in the same column
     public final var itemHeight : CGFloat = 36 { didSet{ invalidate() }}
@@ -172,7 +172,7 @@ public final class CollectionViewListLayout : CollectionViewLayout  {
 //            insets.left += contentInsets.left
 //            insets.right += contentInsets.right
             
-            let rowSpacing : CGFloat = self.delegate?.collectionView?(cv, layout: self, interitemSpacingForItemsInSection: section) ?? self.interitemSpacing
+            let rowSpacing : CGFloat = self.delegate?.collectionView?(cv, layout: self, interitemSpacingForItemsInSection: section) ?? self.interItemSpacing
             
             let contentWidth = cv.bounds.size.width - (contentInsets.left + contentInsets.right)
             let itemWidth = contentWidth - (insets.left + insets.right)

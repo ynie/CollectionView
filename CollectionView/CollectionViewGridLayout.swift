@@ -67,7 +67,7 @@ public final class CollectionViewGridLayout : CollectionViewLayout {
     public final var columnSpacing : CGFloat = 8 { didSet{ invalidateLayout() }}
     
     /// The vertical spacing between items in the same column
-    public final var interitemSpacing : CGFloat = 8 { didSet{ invalidateLayout() }}
+    override public var interItemSpacing: CGFloat { didSet{ invalidateLayout() }}
     
     /// The height of section header views
     public final var headerHeight : CGFloat = 0.0 { didSet{ invalidateLayout() }}
@@ -182,7 +182,7 @@ public final class CollectionViewGridLayout : CollectionViewLayout {
              */
             
             let sectionInsets :  EdgeInsets =  self.delegate?.collectionView?(self.collectionView!, layout: self, insetsForSection: section) ?? self.sectionInsets
-            let rowSpacing : CGFloat = self.delegate?.collectionView?(self.collectionView!, layout: self, rowSpacingForSection: section) ?? self.interitemSpacing
+            let rowSpacing : CGFloat = self.delegate?.collectionView?(self.collectionView!, layout: self, rowSpacingForSection: section) ?? self.interItemSpacing
             let colSpacing = self.delegate?.collectionview?(self.collectionView!, layout: self, columnSpacingForSection: section) ?? self.columnSpacing
             
             let contentWidth = self.collectionView!.bounds.size.width - sectionInsets.left - sectionInsets.right

@@ -41,7 +41,6 @@ open class CollectionViewHorizontalListLayout : CollectionViewLayout {
     
     open var sectionInsets = NSEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     open var itemWidth: CGFloat = 100
-    open var itemSpacing: CGFloat = 8
     
     var cache : [CGRect] = []
     var contentWidth: CGFloat = 0
@@ -59,7 +58,7 @@ open class CollectionViewHorizontalListLayout : CollectionViewLayout {
         let numRows = cv.numberOfItems(in: 0)
         if numRows == 0 { return }
         
-        var xPos: CGFloat = sectionInsets.left - self.itemSpacing
+        var xPos: CGFloat = sectionInsets.left - self.interItemSpacing
         
         for row in 0..<numRows {
             
@@ -71,7 +70,7 @@ open class CollectionViewHorizontalListLayout : CollectionViewLayout {
             let width = self.delegate?.collectionView?(cv, layout: self, widthForItemAt: ip) ?? itemWidth
             
             var x = xPos
-            x += self.itemSpacing
+            x += self.interItemSpacing
             
             let frame = CGRect(x: x, y: sectionInsets.top, width: width, height: height)
             

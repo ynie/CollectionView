@@ -849,6 +849,14 @@ open class CollectionView : ScrollView, NSDraggingSource {
         
         self.peakScrollVelocity = peakScrollVelocity.maxVelocity(self.scrollVelocity)
         self._offsetMark = CACurrentMediaTime()
+        
+        if let window = self.window {
+            let rect = NSRect(origin: NSEvent.mouseLocation, size: NSSize.zero)
+            let windowPoint = window.convertFromScreen(rect).origin
+            let documentPoint = self.contentDocumentView.convert(windowPoint, from: nil)
+            self.updateCellHoverState(at: documentPoint)
+        }
+        
         self.delegate?.collectionViewDidScroll?(self)
     }
     
@@ -1476,30 +1484,61 @@ open class CollectionView : ScrollView, NSDraggingSource {
         if let ta = _trackingArea {
             self.removeTrackingArea(ta)
         }
-        if trackSectionHover {
-            _trackingArea = NSTrackingArea(rect: self.bounds, options: [NSTrackingArea.Options.activeInActiveApp, NSTrackingArea.Options.mouseEnteredAndExited, NSTrackingArea.Options.mouseMoved], owner: self, userInfo: nil)
-            self.addTrackingArea(_trackingArea!)
-        }
+        
+        _trackingArea = NSTrackingArea(rect: self.bounds,
+                                       options: [.activeInActiveApp,
+                                                 .mouseEnteredAndExited,
+                                                 .mouseMoved],
+                                       owner: self,
+                                       userInfo: nil)
+        self.addTrackingArea(_trackingArea!)
     }
     open override func updateTrackingAreas() {
         self.addTracking()
     }
     
-    open override func mouseExited(with theEvent: NSEvent) {
-        if self.isScrolling || !trackSectionHover { return }
-        let loc = self.contentDocumentView.convert(theEvent.locationInWindow, from: nil)
-        self.delegate?.collectionView?(self, mouseMovedToSection: indexPathForSection(at: loc))
+    open override func mouseEntered(with theEvent: NSEvent) {
+        super.mouseEntered(with: theEvent)
+        
+        let locationDocument = self.contentDocumentView.convert(theEvent.locationInWindow, from: nil)
+        self.updateCellHoverState(at: locationDocument)
     }
     
     open override func mouseMoved(with theEvent: NSEvent) {
         super.mouseMoved(with: theEvent)
-        if self.isScrolling || !trackSectionHover { return }
-        let loc = self.contentDocumentView.convert(theEvent.locationInWindow, from: nil)
-        self.delegate?.collectionView?(self, mouseMovedToSection: indexPathForSection(at: loc))
+        let locationDocument = self.contentDocumentView.convert(theEvent.locationInWindow, from: nil)
+        self.updateCellHoverState(at: locationDocument)
+        
+        if !self.isScrolling && trackSectionHover {
+            self.delegate?.collectionView?(self, mouseMovedToSection: indexPathForSection(at: locationDocument))
+        }
     }
-
     
+    open override func mouseExited(with theEvent: NSEvent) {
+        let locationDocument = self.contentDocumentView.convert(theEvent.locationInWindow, from: nil)
+        self.updateCellHoverState(at: locationDocument)
+        
+        if !self.isScrolling && trackSectionHover {
+            self.delegate?.collectionView?(self, mouseMovedToSection: indexPathForSection(at: locationDocument))
+        }
+    }
     
+    fileprivate func updateCellHoverState(at point: CGPoint) {
+        var hoveredCell: CollectionViewCell? = nil
+        if let hoveredIndexPath = self.indexPathForItem(at: point) {
+            hoveredCell = self.cellForItem(at: hoveredIndexPath)
+        }
+        
+        for cell in self.visibleCells {
+            if cell == hoveredCell {
+                if !cell.hovered {
+                    cell.setHovered(true, animated: true)
+                }
+            } else {
+                cell.setHovered(false, animated: true)
+            }
+        }
+    }
     
     // MARK: - Mouse Up/Down
     /*-------------------------------------------------------------------------------*/

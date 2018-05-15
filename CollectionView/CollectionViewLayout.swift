@@ -15,6 +15,8 @@ import Foundation
  
 */
 open class CollectionViewLayout : NSObject {
+    /// Spacing between flow elements
+    public var interItemSpacing: CGFloat = 8
     
     // This is set internally when the layout is set on the CollectionView
     open internal(set) weak var collectionView: CollectionView? { didSet { invalidate() }}

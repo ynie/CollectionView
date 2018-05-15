@@ -179,10 +179,6 @@ open class CollectionViewFlowLayout : CollectionViewLayout {
     // MARK: - Options
     /*-------------------------------------------------------------------------------*/
     
-    /// Spacing between flow elements
-    public var interitemSpacing: CGFloat = 8
-    
-    
     /// Vertical spacing between multiple span elements
     public var interpanSpacing : CGFloat?
     
@@ -435,11 +431,11 @@ open class CollectionViewFlowLayout : CollectionViewLayout {
                                 top = sectionAttrs.rows[sectionAttrs.rows.count - 1].applyTransform(transform,
                                                                                                     leftInset: insets.left,
                                                                                                     width: contentWidth,
-                                                                                                    spacing: interitemSpacing)
+                                                                                                    spacing: self.interItemSpacing)
                                 
                                 
                                 if let s = self.spanGroupSpacingAfter, previousStyle?.isSpan == true { spacing = s }
-                                else { spacing = interitemSpacing }
+                                else { spacing = self.interItemSpacing }
                             }
                             
                             attrs.frame = CGRect(x: insets.left, y: top + spacing, width: size.width, height: size.height)
@@ -450,9 +446,9 @@ open class CollectionViewFlowLayout : CollectionViewLayout {
                         // Check if the last row (if any) matches this items height
                         if !forceBreak, let prev = sectionAttrs.rows.last?.items.last, prev.frame.size.height == size.height {
                             // If there is enough space remaining, add it to the current row
-                            let rem = contentWidth - (prev.frame.maxX - contentInsets.left - insets.left) - interitemSpacing
+                            let rem = contentWidth - (prev.frame.maxX - contentInsets.left - insets.left) - self.interItemSpacing
                             if rem >= size.width {
-                                attrs.frame = CGRect(x: prev.frame.maxX + interitemSpacing, y: prev.frame.origin.y, width: size.width, height: size.height)
+                                attrs.frame = CGRect(x: prev.frame.maxX + self.interItemSpacing, y: prev.frame.origin.y, width: size.width, height: size.height)
                                 sectionAttrs.rows[sectionAttrs.rows.count - 1].add(attributes: attrs)
                             }
                             else { newRow() }
@@ -467,7 +463,7 @@ open class CollectionViewFlowLayout : CollectionViewLayout {
                             top = sectionAttrs.rows[sectionAttrs.rows.count - 1].applyTransform(transform,
                                                                                                     leftInset: insets.left,
                                                                                                     width: contentWidth,
-                                                                                                    spacing: interitemSpacing)
+                                                                                                    spacing: self.interItemSpacing)
                         }
                         
                         var spacing : CGFloat = 0
@@ -479,7 +475,7 @@ open class CollectionViewFlowLayout : CollectionViewLayout {
                                 spacing = s
                             }
                             else {
-                                spacing = interitemSpacing
+                                spacing = self.interItemSpacing
                             }
                         }                        
                         attrs.frame = CGRect(x: insets.left, y: top + spacing, width: size.width, height: size.height)
@@ -501,7 +497,7 @@ open class CollectionViewFlowLayout : CollectionViewLayout {
                     top = sectionAttrs.rows[sectionAttrs.rows.count - 1].applyTransform(transform,
                                                                                   leftInset: insets.left,
                                                                                   width: contentWidth,
-                                                                                  spacing: interitemSpacing)
+                                                                                  spacing: self.interItemSpacing)
                 }
             }
             

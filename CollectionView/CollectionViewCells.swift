@@ -193,6 +193,7 @@ open class CollectionViewCell : CollectionReusableView {
     
     fileprivate var _selected: Bool = false
     fileprivate var _highlighted : Bool = false
+    fileprivate var _hovered : Bool = false
     
     /// The highlight state of the cell.
     public var highlighted: Bool {
@@ -206,6 +207,10 @@ open class CollectionViewCell : CollectionReusableView {
         get { return self._selected }
     }
     
+    public var hovered : Bool {
+        set { self.setHovered(newValue, animated: false) }
+        get { return self._hovered }
+    }
     
     open func setSelected(_ selected: Bool, animated: Bool = true) {
         self._selected = selected
@@ -218,6 +223,11 @@ open class CollectionViewCell : CollectionReusableView {
         }
     }
     
+    open func setHovered(_ hovered: Bool, animated: Bool) {
+        self._hovered = hovered
+    }
+    
+    
     open override func prepareForReuse() {
         super.prepareForReuse()
         if self.selected {
@@ -225,6 +235,9 @@ open class CollectionViewCell : CollectionReusableView {
         }
         if self.highlighted {
             self.setHighlighted(false, animated: false)
+        }
+        if self.hovered {
+            self.setHovered(false, animated: false)
         }
     }
     
