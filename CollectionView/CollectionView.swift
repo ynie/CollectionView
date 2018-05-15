@@ -992,7 +992,7 @@ open class CollectionView : ScrollView, NSDraggingSource {
 
      - Note: If called within performBatchUpdate(_:completion:) sections should be the final indexes after other updates are applied
 	*/
-    public func insertSections(_ sections: IndexSet, animated: Bool) {
+    public func insertSections(_ sections: IndexSet, animated: Bool=true) {
         guard sections.count > 0 else { return }
         self.beginEditing()
         self._updateContext.sections.inserted.formUnion(sections)
@@ -1007,7 +1007,7 @@ open class CollectionView : ScrollView, NSDraggingSource {
 
      - Note: If called within performBatchUpdate(_:completion:) sections should be the index prior to any other updates
 	*/
-    public func deleteSections(_ sections: IndexSet, animated: Bool) {
+    public func deleteSections(_ sections: IndexSet, animated: Bool=true) {
         guard sections.count > 0 else { return }
         self.beginEditing()
         self._updateContext.sections.deleted.formUnion(sections)
@@ -1027,7 +1027,7 @@ open class CollectionView : ScrollView, NSDraggingSource {
      - Destination should be the final index after all other updates
 
 	*/
-    public func moveSection(_ section: Int, to newSection: Int, animated: Bool) {
+    public func moveSection(_ section: Int, to newSection: Int, animated: Bool=true) {
         self.beginEditing()
         self._updateContext.sections.moved[section] = newSection
         self.endEditing(animated)
@@ -1050,7 +1050,7 @@ open class CollectionView : ScrollView, NSDraggingSource {
 	- Parameter animated: If the insertion should be animated
      
 	*/
-    public func insertItems(at indexPaths: [IndexPath], animated: Bool) {
+    public func insertItems(at indexPaths: [IndexPath], animated: Bool=true) {
         guard indexPaths.count > 0 else { return }
         self.beginEditing()
         self._updateContext.items.inserted.formUnion(indexPaths)
@@ -1066,7 +1066,7 @@ open class CollectionView : ScrollView, NSDraggingSource {
      - Parameter animated: If the updates should be animated
 
     */
-    public func deleteItems(at indexPaths: [IndexPath], animated: Bool) {
+    public func deleteItems(at indexPaths: [IndexPath], animated: Bool=true) {
         guard indexPaths.count > 0 else { return }
         self.beginEditing()
         self._updateContext.items.deleted.formUnion(indexPaths)
@@ -1083,7 +1083,7 @@ open class CollectionView : ScrollView, NSDraggingSource {
      - Parameter animated: If the updates should be animated
 
     */
-    public func reloadItems(at indexPaths: [IndexPath], animated: Bool) {
+    public func reloadItems(at indexPaths: [IndexPath], animated: Bool=true) {
         guard indexPaths.count > 0 else { return }
         self.beginEditing()
         self._updateContext.reloadedItems.formUnion(indexPaths)
@@ -1099,13 +1099,13 @@ open class CollectionView : ScrollView, NSDraggingSource {
      - Parameter animated: If the update should be animated
 
     */
-    public func moveItem(at indexPath : IndexPath, to destinationIndexPath: IndexPath, animated: Bool) {
+    public func moveItem(at indexPath : IndexPath, to destinationIndexPath: IndexPath, animated: Bool=true) {
         self.beginEditing()
         self._updateContext.items.moved[indexPath] = destinationIndexPath
         self.endEditing(animated)
     }
     
-    public func moveItems(_ moves: [Move], animated: Bool) {
+    public func moveItems(_ moves: [Move], animated: Bool=true) {
         guard moves.count > 0 else { return }
         self.beginEditing()
         for m in moves {
