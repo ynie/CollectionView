@@ -1592,6 +1592,12 @@ open class CollectionView : ScrollView, NSDraggingSource {
         //        super.mouseUp(theEvent)
         
         if self.draggedIPs.count > 0 {
+            self.draggedIPs.forEach { indexPath in
+                if let cell = self.cellForItem(at: indexPath) {
+                    cell.setHighlighted(false, animated: false)
+                }
+            }
+            
             self.draggedIPs = []
             return
         }
@@ -2556,6 +2562,10 @@ open class CollectionView : ScrollView, NSDraggingSource {
         if self.interactionDelegate?.collectionView?(self, shouldBeginDraggingAt: mouseDown, with: theEvent) != true { return }
         
         var ips = self.sortedIndexPathsForSelectedItems
+        if !ips.contains(mouseDown) {
+            ips = [mouseDown]
+        }
+        
         if let validated = self.interactionDelegate?.collectionView?(self, validateIndexPathsForDrag: ips) {
             ips = validated
         }
@@ -2639,6 +2649,13 @@ open class CollectionView : ScrollView, NSDraggingSource {
         delay(0.5) {
             self.isDragging = false
         }
+        
+        self.draggedIPs.forEach { indexPath in
+            if let view = self.cellForItem(at: indexPath) {
+                view.setHighlighted(false, animated: false)
+            }
+        }
+        
         self.interactionDelegate?.collectionView?(self, draggingSession: session, didEndAt: screenPoint, with: operation, draggedIndexPaths: self.draggedIPs)
     }
     
