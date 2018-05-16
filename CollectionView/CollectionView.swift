@@ -2726,20 +2726,39 @@ open class CollectionView : ScrollView, NSDraggingSource {
             return
         }
         
-        if loc.y > (self.bounds.size.height - self.contentInsets.bottom - autoscrollSize) {
-            let cRect = self.contentVisibleRect
-            let newRect = CGRect(x: cRect.origin.x, y: cRect.maxY + 50, width: cRect.size.width, height: 50)
-            self.scrollRect(newRect, to: .trailing, animated: true, completion: nil)
-            valid()
-        }
-        else if loc.y > self.contentInsets.top && loc.y < (self.contentInsets.top + autoscrollSize) {
-            let cRect = self.contentVisibleRect
-            let newRect = CGRect(x: cRect.origin.x, y: cRect.minY - 5, width: cRect.size.width, height: 5)
-            self.scrollRect(newRect, to: .leading, animated: true, completion: nil)
-            valid()
-        }
-        else {
-            invalidateAutoscroll()
+        let moveDelta: CGFloat = 20
+        if self.hasVerticalScroller {
+            if loc.y > (self.bounds.size.height - self.contentInsets.bottom - autoscrollSize) {
+                let cRect = self.contentVisibleRect
+                let newRect = CGRect(x: cRect.origin.x, y: cRect.maxY + moveDelta, width: cRect.size.width, height: moveDelta)
+                self.scrollRect(newRect, to: .trailing, animated: true, completion: nil)
+                valid()
+            }
+            else if loc.y > self.contentInsets.top && loc.y < (self.contentInsets.top + autoscrollSize) {
+                let cRect = self.contentVisibleRect
+                let newRect = CGRect(x: cRect.origin.x, y: cRect.minY - moveDelta, width: cRect.size.width, height: moveDelta)
+                self.scrollRect(newRect, to: .leading, animated: true, completion: nil)
+                valid()
+            }
+            else {
+                invalidateAutoscroll()
+            }
+        } else {
+            if loc.x > (self.bounds.size.width - self.contentInsets.right - autoscrollSize) {
+                let cRect = self.contentVisibleRect
+                let newRect = CGRect(x: cRect.maxX + moveDelta, y: cRect.origin.y, width: moveDelta, height: cRect.size.height)
+                self.scrollRect(newRect, to: .trailing, animated: true, completion: nil)
+                valid()
+            }
+            else if loc.x > self.contentInsets.left && loc.x < (self.contentInsets.left + autoscrollSize) {
+                let cRect = self.contentVisibleRect
+                let newRect = CGRect(x: cRect.minX - moveDelta, y: cRect.origin.y, width: moveDelta, height: cRect.size.height)
+                self.scrollRect(newRect, to: .leading, animated: true, completion: nil)
+                valid()
+            }
+            else {
+                invalidateAutoscroll()
+            }
         }
     }
 }
