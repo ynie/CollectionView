@@ -122,22 +122,23 @@ open class ClipView : NSClipView {
         
         manualScroll = false
         shouldAnimateOriginChange = animated
-        if animated == false {
+        if animated {
+            self.completionBlock = completion
+            let success = super.scrollToVisible(rect)
+            if !success {
+                self.finishedScrolling(success)
+            }
             
+            return success
+        } else {
             // Calculate the point to scroll to to get make the rect visible
             var o = rect.origin
             o.y -= self.contentInsets.top
             self.scroll(to: o)
+            self.scrollView?.reflectScrolledClipView(self)
             completion?(true)
             return true
         }
-        
-        self.completionBlock = completion
-        let success = super.scrollToVisible(rect)
-        if !success {
-            self.finishedScrolling(success)
-        }
-        return success
     }
     
     

@@ -1683,7 +1683,7 @@ open class CollectionView : ScrollView, NSDraggingSource {
         guard let indexPath = (extendSelection ? _extendingEnd : _extendingStart) ?? self._selectedIndexPaths.first else { return }
         
         if let moveTo = self.collectionViewLayout.indexPathForNextItem(moving: direction, from: indexPath) {
-            self._moveSelection(to: moveTo, extend: extendSelection, scrollPosition: .nearest, animated: true)
+            self._moveSelection(to: moveTo, extend: extendSelection, scrollPosition: .nearest, animated: false)
         }
     }
     
