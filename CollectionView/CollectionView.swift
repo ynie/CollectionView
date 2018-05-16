@@ -1843,7 +1843,9 @@ open class CollectionView : ScrollView, NSDraggingSource {
             self.deselectAllItems()
             return
         }
-        self._performProgramaticSelection(for: indexPaths, animated: animated, scrollPosition: scrollPosition)
+        self._performProgramaticSelection(for: indexPaths,
+                                          animated: animated,
+                                          scrollPosition: scrollPosition)
     }
     
 	
@@ -1895,7 +1897,7 @@ open class CollectionView : ScrollView, NSDraggingSource {
     
     private func _performProgramaticSelection(for indexPaths: Set<IndexPath>, animated: Bool, scrollPosition: CollectionViewScrollPosition) {
         self._extendingStart = nil
-        self._selectItems(at: indexPaths, animated: animated, clear: true, scrollPosition: scrollPosition, notify: notifyDelegate)
+        self._selectItems(at: indexPaths, animated: animated, clear: true, scrollPosition: scrollPosition, notify: notifyDelegate, keepOtherSelections: true)
     }
     
     
@@ -1903,7 +1905,7 @@ open class CollectionView : ScrollView, NSDraggingSource {
     // MARK: - Internal Selection Handling
     /*-------------------------------------------------------------------------------*/
     
-    private func _selectItems(at indexPaths : Set<IndexPath>, animated: Bool, clear: Bool = false, scrollPosition: CollectionViewScrollPosition = .none, notify: Bool) {
+    private func _selectItems(at indexPaths : Set<IndexPath>, animated: Bool, clear: Bool = false, scrollPosition: CollectionViewScrollPosition = .none, notify: Bool, keepOtherSelections: Bool) {
         let needApproval = repeatSelections ? indexPaths : indexPaths.subtracting(self._selectedIndexPaths)
         
         var approved = needApproval
@@ -1930,7 +1932,7 @@ open class CollectionView : ScrollView, NSDraggingSource {
         }
         
         if notify {
-            self.delegate?.collectionView?(self, didSelectItemsAt: approved)
+            self.delegate?.collectionView?(self, didSelectItemsAt: approved, keepOtherSelections: keepOtherSelections)
         }
     }
     
@@ -1989,7 +1991,7 @@ open class CollectionView : ScrollView, NSDraggingSource {
                 self._deselectItem(at: ip, animated: true, notify: true)
             }
             else {
-                self._selectItems(at: Set([ip]), animated: true, notify: true)
+                self._selectItems(at: Set([ip]), animated: true, notify: true, keepOtherSelections: true)
                 self._extendingStart = ip
             }
         }
@@ -2006,7 +2008,7 @@ open class CollectionView : ScrollView, NSDraggingSource {
             self._deselectItems(at: de, animated: true, notify: true)
             
             self._extendingStart = ip
-            self._selectItems(at: Set([ip]), animated: true, notify: true)
+            self._selectItems(at: Set([ip]), animated: true, notify: true, keepOtherSelections: false)
         }
     }
     
@@ -2052,11 +2054,11 @@ open class CollectionView : ScrollView, NSDraggingSource {
             else {
                 self._extendingStart = indexPath
             }
-            self._selectItems(at: indexesToSelect, animated: true, clear: false, notify: true)
+            self._selectItems(at: indexesToSelect, animated: true, clear: false, notify: true, keepOtherSelections: true)
         }
         else {
             self._extendingStart = nil
-            self._selectItems(at: indexesToSelect, animated: true, clear: true, notify: true)
+            self._selectItems(at: indexesToSelect, animated: true, clear: true, notify: true, keepOtherSelections: true)
         }
         
         self.scrollItem(at: indexPath, to: scrollPosition, animated: animated, completion: nil)

@@ -283,7 +283,9 @@ import Foundation
      - Note: The provided index paths do not inlcude index paths selected prior to this event.
      */
     
-    @objc optional func collectionView(_ collectionView: CollectionView, didSelectItemsAt indexPaths: Set<IndexPath>)
+    @objc optional func collectionView(_ collectionView: CollectionView,
+                                       didSelectItemsAt indexPaths: Set<IndexPath>,
+                                       keepOtherSelections: Bool)
     
     
     /**
